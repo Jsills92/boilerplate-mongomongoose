@@ -8,7 +8,18 @@ mongoose.connection.once('open', () => {
   // You can add additional logic to verify by performing a query or saving data
 });
 
-let Person;
+const personSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  age: Number,
+  favoriteFoods: [String]
+});
+
+let Person = mongoose.model('Person', personSchema); 
+
+
 
 const createAndSavePerson = (done) => {
   done(null /*, data*/);
