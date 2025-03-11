@@ -22,29 +22,61 @@ let Person = mongoose.model('Person', personSchema);
 
 
 const createAndSavePerson = (done) => {
-  done(null /*, data*/);
+  let newPerson = new Person({
+    name: "John Doe",
+    age: 25,
+    favoriteFoods: ["Pizza", "Burger"]});
+
+ newPerson.save((err, data) => {
+    if (err) return done(err);
+    done(null, data);
+  });
 };
 
 const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
+  Person.create(arrayOfPeople, (err, data) => {
+    if (err) return done(err);
+    done(null, data);
+  });
 };
 
 const findPeopleByName = (personName, done) => {
-  done(null /*, data*/);
+  Person.find({ name: personName }, (err, data) => {
+    if (err) return done(err);
+    done(null, data);
+  });
 };
 
 const findOneByFood = (food, done) => {
-  done(null /*, data*/);
+  Person.findOne({ favoriteFoods: food }, (err, data) =>{
+    if (err) return done(err);
+    done(null, data);
+  });
 };
 
 const findPersonById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findById({ _id: personId }, (err, data) =>{
+    if (err) return done(err);
+    done(null, data);
+  });
 };
 
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
+  
+//find person by id
+  Person.findById({ _id: personId }, (err, data) =>{
+    if (err) return done(err);
 
-  done(null /*, data*/);
+    //push hamburger to favorite foods using foddToAdd variable
+    data.favoriteFoods.push(foodToAdd);
+ 
+// save updatedPerson to the document
+    data.save((err, updatedPerson) => {
+      if (err) return done(err);
+      done(null, updatedPerson);
+    });
+  });
 };
 
 const findAndUpdate = (personName, done) => {
@@ -62,6 +94,7 @@ const removeManyPeople = (done) => {
 
   done(null /*, data*/);
 };
+
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
@@ -84,5 +117,5 @@ exports.findEditThenSave = findEditThenSave;
 exports.findAndUpdate = findAndUpdate;
 exports.createManyPeople = createManyPeople;
 exports.removeById = removeById;
-exports.removeManyPeople = removeManyPeople;
+//exports.removeManyPeople = removeManyPeople;
 exports.queryChain = queryChain;
