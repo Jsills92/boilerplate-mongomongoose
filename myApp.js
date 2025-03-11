@@ -82,25 +82,47 @@ const findEditThenSave = (personId, done) => {
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
 
-  done(null /*, data*/);
+  Person.findOneAndUpdate(
+    { name: personName },   // Search condition
+    { age: ageToSet },      // Update action
+    { new: true },          // Option to return the updated document
+    (err, updatedPerson) => {
+      if (err) return done(err);
+      done(null, updatedPerson);  // Return the updated person
+    }
+  );
 };
 
+
 const removeById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findByIdAndRemove({ _id: personId }, (err, data) =>{
+    if (err) return done(err);
+    done(null, data);
+  });
 };
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
-
-  done(null /*, data*/);
+  Person.deleteMany({ name: nameToRemove }, (err, data) =>{
+    if (err) return done(err);
+    done(null, data);
+  });
 };
 
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
 
-  done(null /*, data*/);
+  Person.find({ favoriteFoods: foodToSearch })
+    .sort({ name: 1 }) // Sort by name in ascending order
+    .limit(2) // Limit the result to 2 documents
+    .select('-age') // Exclude the 'age' field from the result
+    .exec((err, data) => { // Pass the callback to exec
+      if (err) return done(err);
+      done(null, data);
+    });
 };
+
 
 /** **Well Done !!**
 /* You completed these challenges, let's go celebrate !
@@ -117,5 +139,5 @@ exports.findEditThenSave = findEditThenSave;
 exports.findAndUpdate = findAndUpdate;
 exports.createManyPeople = createManyPeople;
 exports.removeById = removeById;
-//exports.removeManyPeople = removeManyPeople;
+exports.removeManyPeople = removeManyPeople;
 exports.queryChain = queryChain;
